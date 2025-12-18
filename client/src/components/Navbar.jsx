@@ -1,57 +1,65 @@
-import { useTheme } from "../context/ThemeContext"
-import { useEffect, useState } from "react"
-
+import { motion, useScroll, useMotionValueEvent } from "framer-motion"
+import { useState } from "react"
 
 function Navbar() {
-    const { theme, toggleTheme } = useTheme()
-
+  const { scrollY } = useScroll()
+  const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious()
+
+    // Hide navbar on scroll down
+    if (latest > previous && latest > 100) {
+      setHidden(true)
+    } else {
+      setHidden(false)
     }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+
+    // Change background after scroll
+    if (latest > 50) {
+      setScrolled(true)
+    } else {
+      setScrolled(false)
+    }
+  })
 
   return (
-    <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300
-        ${scrolled ? "bg-black/80 backdrop-blur-md" : "bg-transparent"}
-      `}
+    <motion.nav
+      variants={{
+        visible: { y: 0 },
+        hidden: { y: "-100%" },
+      }}
+      animate={hidden ? "hidden" : "visible"}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+      initial={{ y: -80 }}
+      className={`fixed top-0 left-0 w-full z-50 ${
+        scrolled ? "bg-black/70 backdrop-blur-md" : "bg-transparent"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center text-white">
+        {/* Logo */}
         <h1 className="text-xl font-bold tracking-wide">
-          Natyadeep Foundation
+          Natyadeep
         </h1>
 
-        <ul className="hidden md:flex gap-8 text-sm">
-          <li className="cursor-pointer hover:text-yellow-400">About</li>
-          <li className="cursor-pointer hover:text-yellow-400">Impact</li>
-          <li className="cursor-pointer hover:text-yellow-400">Volunteer</li>
-          <li className="cursor-pointer hover:text-yellow-400">Contact</li>
+        {/* Links */}
+        <ul className="flex gap-8 text-sm font-medium">
+          <li className="cursor-pointer hover:text-orange-400 transition">
+            Home
+          </li>
+          <li className="cursor-pointer hover:text-orange-400 transition">
+            About
+          </li>
+          <li className="cursor-pointer hover:text-orange-400 transition">
+            Impact
+          </li>
+          <li className="cursor-pointer hover:text-orange-400 transition">
+            Volunteer
+          </li>
         </ul>
-
-        <button className="px-4 py-2 bg-yellow-400 text-black text-sm font-semibold rounded-lg">
-          Donate
-        </button>
-
-        <button
-  onClick={toggleTheme}
-  className="
-    ml-4 px-3 py-2 rounded-lg text-sm font-medium
-    border border-brandOrange
-    text-brandOrange
-    hover:bg-brandOrange hover:text-white
-    transition
-  "
->
-  {theme === "dark" ? "Light Mode" : "Dark Mode"}
-</button>
-
       </div>
-    </nav>
+    </motion.nav>
   )
 }
 

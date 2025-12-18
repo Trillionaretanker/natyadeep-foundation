@@ -1,16 +1,20 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import connectDB from "./config/db.js"
+import volunteerRoutes from "./routes/volunteerRoutes.js"
 
 dotenv.config()
+connectDB()
 
 const app = express()
 
-// Middleware
 app.use(cors())
 app.use(express.json())
 
-// Test route
+// Routes
+app.use("/api/volunteers", volunteerRoutes)
+
 app.get("/", (req, res) => {
   res.send("Natyadeep Foundation Backend Running")
 })

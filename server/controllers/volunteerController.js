@@ -38,3 +38,23 @@ export const createVolunteer = async (req, res) => {
     })
   }
 }
+
+// @desc    Get all volunteers
+// @route   GET /api/volunteers
+// @access  Public (will be protected later)
+export const getVolunteers = async (req, res) => {
+  try {
+    const volunteers = await Volunteer.find().sort({ createdAt: -1 })
+
+    res.status(200).json({
+      success: true,
+      count: volunteers.length,
+      data: volunteers,
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch volunteers",
+    })
+  }
+}

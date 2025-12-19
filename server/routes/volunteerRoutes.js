@@ -1,9 +1,12 @@
 import express from "express"
-import { createVolunteer } from "../controllers/volunteerController.js"
+import {
+  createVolunteer,
+  getVolunteers,
+} from "../controllers/volunteerController.js"
 
 const router = express.Router()
 
-// POST /api/volunteers
 router.post("/", createVolunteer)
+router.get("/", getVolunteers)
 
 export default router

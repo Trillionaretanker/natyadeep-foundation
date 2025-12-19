@@ -4,8 +4,9 @@ import NatarajaCanvas from "../Canvas/NatarajaCanvas"
 function Hero() {
   return (
     <section
+      id="home"
       className="
-        relative min-h-screen overflow-hidden
+        relative min-h-screen pt-20 overflow-hidden
         bg-lightBg text-lightText
         dark:bg-black dark:text-white
       "
